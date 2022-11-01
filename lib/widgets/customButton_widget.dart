@@ -3,10 +3,9 @@
 import 'package:flutter/material.dart';
 
 class CustomButtonWidget extends StatelessWidget {
-  const CustomButtonWidget(
-      {super.key, required this.funcion, required this.texto});
+  const CustomButtonWidget({super.key, required this.funcion, required this.texto});
 
-  final VoidCallback funcion;
+  final VoidCallback? funcion;
   final String texto;
 
   @override

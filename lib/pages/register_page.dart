@@ -1,6 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, use_build_context_synchronously
+import 'package:chat_pal/services/auth_service.dart';
 import 'package:chat_pal/widgets/aa_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../helpers/mostrar_alerta.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -55,6 +59,9 @@ class _FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    //
+    final authServ = Provider.of<AuthService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -84,10 +91,24 @@ class _FormState extends State<_Form> {
           ),
           CustomButtonWidget(
             texto: 'Ingresar',
-            funcion: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
-            },
+            funcion: authServ.autenticando
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
+                    // print(emailCtrl.text);
+                    // print(passCtrl.text);
+                    final registrOK = await authServ.register(emailCtrl.text.trim(),
+                        passCtrl.text.trim(), nameCtrl.text.trim());
+
+                    if (registrOK == 'true') {
+                      //Varias cosas
+
+                      Navigator.pushReplacementNamed(context, 'usuarios');
+                    } else {
+                      //Mostrar una alerta
+                      mostrarAlerta(context, 'Registro Incorrecto', registrOK.toString());
+                    }
+                  },
           ),
         ],
       ),
