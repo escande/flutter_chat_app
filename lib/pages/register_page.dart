@@ -1,10 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, use_build_context_synchronously
-import 'package:chat_pal/services/auth_service.dart';
-import 'package:chat_pal/widgets/aa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:chat_pal/services/auth_service.dart';
+import 'package:chat_pal/widgets/aa_widget.dart';
 import '../helpers/mostrar_alerta.dart';
+import '../services/socket_service.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -61,6 +62,7 @@ class _FormState extends State<_Form> {
   Widget build(BuildContext context) {
     //
     final authServ = Provider.of<AuthService>(context);
+    final socketServ = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -101,8 +103,8 @@ class _FormState extends State<_Form> {
                         passCtrl.text.trim(), nameCtrl.text.trim());
 
                     if (registrOK == 'true') {
-                      //Varias cosas
-
+                      //Connectar al socket
+                      socketServ.connect();
                       Navigator.pushReplacementNamed(context, 'usuarios');
                     } else {
                       //Mostrar una alerta

@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
-import 'package:chat_pal/helpers/mostrar_alerta.dart';
-import 'package:chat_pal/services/auth_service.dart';
-import 'package:chat_pal/widgets/aa_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:chat_pal/helpers/mostrar_alerta.dart';
+import 'package:chat_pal/services/auth_service.dart';
+import 'package:chat_pal/services/socket_service.dart';
+import 'package:chat_pal/widgets/aa_widget.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -57,6 +59,7 @@ class _FormState extends State<_Form> {
   Widget build(BuildContext context) {
     //
     final authProv = Provider.of<AuthService>(context);
+    final socketServ = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -90,7 +93,8 @@ class _FormState extends State<_Form> {
                         await authProv.login(emailCtrl.text.trim(), passCtrl.text.trim());
 
                     if (loginOk) {
-                      //Varias cosas
+                      //Si es OK, conectamos con el socketService
+                      socketServ.connect();
 
                       Navigator.pushReplacementNamed(context, 'usuarios');
                     } else {
